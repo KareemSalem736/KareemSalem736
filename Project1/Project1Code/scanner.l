@@ -1,7 +1,8 @@
-/* CMSC 430 Compiler Theory and Design
-   Project 1 Skeleton
-   UMGC CITE
-   Summer 2023 */
+/*	CMSC 430 Compiler Theory and Design
+	Project 1
+	Kareem Salem
+	March 17, 2025
+*/
 
 /* This file contains flex input file */
 
