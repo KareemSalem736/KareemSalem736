@@ -1,7 +1,7 @@
 /* CMSC 430 Compiler Theory and Design
    Project 2 Skeleton
-   UMGC CITE
-   Summer 2023 
+   Kareem Salem
+   March 31, 2025
 
    Project 2 Parser */
 
@@ -75,14 +75,14 @@ body:
 
 statement_:
 	statement ';' |
-	FOLD direction operator list_choice ENDFOLD ';' |
 	error ';' ;
     
 statement:
 	expression |
 	WHEN condition ',' expression ':' expression |
-	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH |
-	IF condition THEN statement_ elsif_statements else_statement ENDIF ;
+	SWITCH expression IS cases OTHERS ARROW statement_ ENDSWITCH  |
+	FOLD direction operator list_choice ENDFOLD  |
+	IF condition THEN statement_ elsif_statements else_statement ENDIF  ;
 
 direction:
 	LEFT | RIGHT ;
@@ -109,7 +109,7 @@ cases:
 	%empty ;
 	
 case:
-	CASE INT_LITERAL ARROW statement ';' |
+	CASE INT_LITERAL ARROW statement_ |
 	error ';' ; 
 
 condition:
