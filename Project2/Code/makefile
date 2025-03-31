@@ -20,4 +20,5 @@ listing.o: listing.cc listing.h
 	g++ -c listing.cc
 
 clean:
-	rm -f *.o compile lex.yy.c parser.tab.c parser.tab.h
+	rm -f *.o compile lex.yy.c parser.tab.c parser.tab.h parser.output scanner.c parser.c tokens.h
+	rm -f *.out *.gch *.tmp

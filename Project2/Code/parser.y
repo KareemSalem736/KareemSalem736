@@ -8,6 +8,7 @@
 %{
 
 #include <string>
+#include <cstring>
 
 using namespace std;
 
@@ -25,7 +26,8 @@ void yyerror(const char* message);
 %token ADDOP MULOP ANDOP RELOP ARROW
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS
-	RETURNS SWITCH WHEN
+	RETURNS SWITCH WHEN ELSIF ENDFOLD ENDIF FOLD IF LEFT REAL RIGHT THEN REAL_LITERAL 
+	OROP NOTOP REMOP EXPOP NEGOP
 
 %%
 
@@ -33,19 +35,33 @@ function:
 	function_header optional_variable body ;
 
 function_header:	
-	FUNCTION IDENTIFIER RETURNS type ';'  ;
+	FUNCTION IDENTIFIER parameters RETURNS type ';' |
+	FUNCTION error ';' ;
+
+parameters:
+	parameter_list |
+	%empty ;
+
+parameter_list:
+	parameter |
+	parameter ',' parameter_list ;
+
+parameter:
+	IDENTIFIER ':' type ;
 
 type:
 	INTEGER |
-	CHARACTER ;
+	CHARACTER |
+	REAL ;
 	
 optional_variable:
-	variable |
-	%empty ;
-    
+	variable optional_variable |
+	%empty ;   
+
 variable:	
 	IDENTIFIER ':' type IS statement ';' |
-	IDENTIFIER ':' LIST OF type IS list ';' ;
+	IDENTIFIER ':' LIST OF type IS list ';' |
+	error ';' ;
 
 list:
 	'(' expressions ')' ;
@@ -59,42 +75,77 @@ body:
 
 statement_:
 	statement ';' |
+	FOLD direction operator list_choice ENDFOLD ';' |
 	error ';' ;
     
 statement:
 	expression |
 	WHEN condition ',' expression ':' expression |
-	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH ;
+	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH |
+	IF condition THEN statement_ elsif_statements else_statement ENDIF ;
+
+direction:
+	LEFT | RIGHT ;
+
+operator:
+	ADDOP | MULOP | REMOP ;
+
+list_choice:
+	list | IDENTIFIER ;
+
+elsif_statements:
+	elsif_statement elsif_statements |
+	%empty ;
+
+elsif_statement:
+	ELSIF condition THEN statement_ ;
+
+else_statement:
+	ELSE statement_ |
+	%empty ;
 
 cases:
 	cases case |
 	%empty ;
 	
 case:
-	CASE INT_LITERAL ARROW statement ';' ; 
+	CASE INT_LITERAL ARROW statement ';' |
+	error ';' ; 
 
 condition:
-	condition ANDOP relation |
+	condition OROP logical_and |
+	logical_and ;
+
+logical_and:
+	logical_and ANDOP relation |
 	relation ;
 
 relation:
 	'(' condition ')' |
-	expression RELOP expression ;
+	expression RELOP expression |
+	NOTOP relation ;
 
 expression:
 	expression ADDOP term |
 	term ;
-      
+
 term:
-	term MULOP primary |
-	primary ;
+	term MULOP factor |
+	term REMOP factor |
+	factor ;
+
+factor:
+	primary |
+	primary EXPOP factor ;
 
 primary:
 	'(' expression ')' |
 	INT_LITERAL |
 	CHAR_LITERAL |
 	IDENTIFIER '(' expression ')' |
-	IDENTIFIER ;
+	IDENTIFIER |
+	REAL_LITERAL |
+	NEGOP primary ;
 
 %%
 
