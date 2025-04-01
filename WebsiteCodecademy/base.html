@@ -7,21 +7,31 @@
     <link rel="stylesheet" href="base.css">
 </head>
 <body>
-    <button id="open-popup">About Me</button>
-    <div id="popup" class="popup">
-        <div class="popup-content-aboutme">
-            <span class="close"></span>
-            <p>About Me content</p>
-        </div>
+    <div class="wrapper">
+        <main class="container">
+            <h1>Hi I'm Kareem Salem</h1>
+            <p>I am a Full Stack Software Engineer.</p>
+
+            <button id="open-popup-about-me">About Me</button>
+            <div id="popup-about-me" class="popup">
+                <div class="popup-content">
+                    <span class="close">&times;</span>
+                    <p>About Me content</p>
+                </div>
+            </div>
+
+            <button id="open-popup-work-experience">Work Experience</button>
+            <div id="popup-work-experience" class="popup">
+                <div class="popup-content">
+                    <span class="close">&times;</span>
+                    <p>Work experience</p>
+                </div>
+            </div>
+        </main>
     </div>
-    <button id="open-popup">Work Experience</button>
-    <div id="popup" class="popup">
-        <div class="popup-content-work-experience">
-            <span class="close"></span>
-            <p>Work experience</p>
-        </div>
-    </div>
+
+    <footer>Contact Info</footer>
+
     <script src="script.js"></script>
 </body>
-<footer>Contact Info</footer>
 </html>
