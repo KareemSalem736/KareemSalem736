@@ -1,74 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en"> <!-- Add lang for accessibility/SEO -->
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, intial-scale=1.0">
-    <title>KareemSalemSWE</title>
-    <link rel="stylesheet" href="base.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ 'initial', not 'intial' -->
+  <title>KareemSalemSWE</title>
+  <link rel="stylesheet" href="base.css">
 </head>
-<body>
-    <header class="header">
-        <div class="glass-wrap">
-            <h1>Full Stack Software Engineer</h1>
-        </div>
-    </header>
-        <main class="container">
-            <h1>Kareem Salem</h1>
-            <p>With a background in Cyber Defense Operations and 5 years of service in the U.S. Air Force. 
-                I specialize in solving real-world problems with modern tools and clean code — blending mission-driven focus with full stack expertise.</p>
-            <div class="button-group">
-                <button id="open-popup-about-me">About Me</button>
-                <div id="popup-about-me" class="popup">
-                    <div class="popup-content">
-                        <span class="close">&times;</span>
-                        <section id="about">
-                            <h2>About Me</h2>
-                            <p>
-                              With a B.S. in Computer Science and years of hands-on experience in secure communications, I bring a unique perspective to software engineering. My time in the U.S. Air Force honed my ability to manage mission-critical data and collaborate under pressure. 
-                            </p>
-                            <p>
-                              Outside of service, I’ve continued to grow through self-driven learning and real-world projects — from designing secure password generators to optimizing SQL databases. I thrive on building efficient, scalable, and secure systems.
-                            </p>
-                            <p>
-                              I’m currently preparing for a SkillBridge opportunity in June 2025, where I aim to transition into a full-time Software Engineer role and contribute to innovative teams solving meaningful problems.
-                            </p>
-                          </section>                          
-                    </div>
-                </div>
 
-                <button id="open-popup-work-experience">Work Experience</button>
-                <div id="popup-work-experience" class="popup">
-                    <div class="popup-content">
-                        <span class="close">&times;</span>
-                        <section id="experience">
-                            <h2>Work Experience</h2>
-                          
-                            <h3>Deployable Communications Manager — U.S. Air Force</h3>
-                            <p><em>Scott AFB, IL | Dec 2023 – Present</em></p>
-                            <ul>
-                              <li>Configured modern communication systems using PowerShell and legacy tools in virtual environments.</li>
-                              <li>Engineered compatibility solutions to integrate XP-only firmware with modern Windows 11 systems.</li>
-                            </ul>
-                          
-                            <h3>Flight Training Technician — U.S. Air Force</h3>
-                            <p><em>Ramstein AB, Germany | Aug 2022 – Nov 2023</em></p>
-                            <ul>
-                              <li>Led a data inventory project managing $33M in equipment using Excel and shared cloud systems.</li>
-                              <li>Deployed a training readiness app that improved deployment readiness from 42% to 96%.</li>
-                            </ul>
-                          
-                            <h3>Radio Frequency Technician — U.S. Air Force</h3>
-                            <p><em>Ramstein AB, Germany | Dec 2019 – Jul 2022</em></p>
-                            <ul>
-                              <li>Built and deployed secure networks across 20,000+ square miles supporting NATO operations.</li>
-                              <li>Upgraded communications infrastructure for critical missions across Europe.</li>
-                            </ul>
-                          </section>
-                          
-                    </div>
-                </div>
-            </div>
-        </main>
-    <script src="script.js"></script>
+<body>
+  <!-- ✅ Wrapper only for content that needs to be centered or constrained -->
+  <div class="wrapper">
+    <header class="header">
+      <div class="glass-wrap">
+        <h1>Full Stack Software Engineer</h1>
+      </div>
+    </header>
+
+    <main class="container">
+      <h1>Kareem Salem</h1>
+      <p>
+        With a background in Cyber Defense Operations and 5 years of service in the U.S. Air Force, 
+        I specialize in solving real-world problems with modern tools and clean code — blending mission-driven focus with full stack expertise.
+      </p>
+
+      <!-- ✅ Button group should wrap the buttons only -->
+      <div class="button-group">
+        <button id="open-popup-about-me">About Me</button>
+        <button id="open-popup-work-experience">Work Experience</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ✅ Popups should be outside the layout wrapper to stay fixed and centered -->
+  <div id="popup-about-me" class="popup">
+    <div class="popup-content">
+      <span class="close">&times;</span>
+      <section id="about">
+        <h2>About Me</h2>
+        <p>
+          With a B.S. in Computer Science and years of hands-on experience in secure communications, I bring a unique perspective to software engineering. 
+          My time in the U.S. Air Force honed my ability to manage mission-critical data and collaborate under pressure.
+        </p>
+        <p>
+          Outside of service, I’ve continued to grow through self-driven learning and real-world projects — from designing secure password generators to optimizing SQL databases. 
+          I thrive on building efficient, scalable, and secure systems.
+        </p>
+        <p>
+          I’m currently preparing for a SkillBridge opportunity in June 2025, where I aim to transition into a full-time Software Engineer role and contribute to innovative teams solving meaningful problems.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <div id="popup-work-experience" class="popup">
+    <div class="popup-content">
+      <span class="close">&times;</span>
+      <section id="experience">
+        <h2>Work Experience</h2>
+
+        <h3>Deployable Communications Manager — U.S. Air Force</h3>
+        <p><em>Scott AFB, IL | Dec 2023 – Present</em></p>
+        <ul>
+          <li>Configured modern communication systems using PowerShell and legacy tools in virtual environments.</li>
+          <li>Engineered compatibility solutions to integrate XP-only firmware with modern Windows 11 systems.</li>
+        </ul>
+
+        <h3>Flight Training Technician — U.S. Air Force</h3>
+        <p><em>Ramstein AB, Germany | Aug 2022 – Nov 2023</em></p>
+        <ul>
+          <li>Led a data inventory project managing $33M in equipment using Excel and shared cloud systems.</li>
+          <li>Deployed a training readiness app that improved deployment readiness from 42% to 96%.</li>
+        </ul>
+
+        <h3>Radio Frequency Technician — U.S. Air Force</h3>
+        <p><em>Ramstein AB, Germany | Dec 2019 – Jul 2022</em></p>
+        <ul>
+          <li>Built and deployed secure networks across 20,000+ square miles supporting NATO operations.</li>
+          <li>Upgraded communications infrastructure for critical missions across Europe.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

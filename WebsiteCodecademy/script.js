@@ -5,7 +5,7 @@ const closes = document.querySelectorAll(".close");
 buttons.forEach((btn) => {
     btn.onclick = () => {
         const id = btn.id.replace("open-", "");
-        document.getElementById(id).style.display = "block";  
+        document.getElementById(id).style.display = "flex";  
     };
 });
 
