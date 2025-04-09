@@ -1,0 +1,45 @@
+// Kareem Salem     Week 5 discussion
+/*
+Integer (Decimal and Hexadecimal), Real and Character literals
+Every arithmetic operator: + - * / % ^ ~
+Every relational operator: = /= > >= < <=
+Every logical operator: &
+A when statement| 
+An if statement
+A switch statement
+A fold statement
+Multiple variable declarations
+Multiple parameter declarations
+*/
+
+function main a: integer, b: real, c: character returns integer;
+    dec: integer is 10;
+    hex: integer is #1F;
+    r: real is 3.14;
+    ch: character is 'Z';
+    list1: list of integer is (4, 3, 2, 1);
+    list2: list of integer is (1, 2, 3);
+    x: integer is (a + dec * 2 - hex / 2 % 5 ^ 2 ~ 1);
+begin
+    if a = 0 then
+        when b > 1.5 & a < 5, 1 : 0;
+    elsif a < 10 then
+        switch a is
+            case 1 => fold left + list1 endfold;
+            case 2 => fold right - list2 endfold;
+            others => 2;
+        endswitch;
+    else
+        if b >= 0.5 then
+            if ch = 'Z' then
+                x + 1;
+            else
+                x - 1;
+            endif;
+        else
+            x * 2;
+        endif;
+    endif;
+end;
+
+    
