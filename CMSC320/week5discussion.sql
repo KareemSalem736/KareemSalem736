@@ -20,10 +20,9 @@ CREATE TABLE Catalog (
     FOREIGN KEY (copy_id) REFERENCES Movie_Copy(copy_id)
 );
 
-INSERT INTO Distributor (distributor_id, name) VALUES (1, 'Marvel Studios');
+INSERT INTO Movie_Copy (copy_id, price, format_, rented, serial_number) VALUES (102, 19.99, 'BLU', 'Y', 123456789013);
+INSERT INTO Movie_Copy (copy_id, price, format_, rented, serial_number) VALUES (103, 12.50, 'DVD', 'N', 123456789014);
+INSERT INTO Movie_Copy (copy_id, price, format_, rented, serial_number) VALUES (104, 9.99, 'DIG', 'Y', 123456789015);
 INSERT INTO Movie_Copy (copy_id, price, format_, rented, serial_number) VALUES (101, 14.99, 'DVD', 'N', 123456789012);
-INSERT INTO Catalog (distributor_id, copy_id, wholesale_price) VALUES (1, 101, 9.99);
 
-SELECT * FROM Distributor;
 SELECT * FROM Movie_Copy;
-SELECT * FROM Catalog;
