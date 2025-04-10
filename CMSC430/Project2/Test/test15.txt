@@ -1,0 +1,30 @@
+function main a: integer, b: real, c: character returns integer;
+    dec: integer is 10;
+    hex: integer is #1F;
+    r: real is 3.14;
+    ch: character is 'Z';
+    neg: integer is ~1;
+    list1: list of integer is (4, 3, 2, 1);
+    list2: list of integer is (1, 2, 3);
+    x: integer is (a + dec * 2 - hex / 2 % 5 ^ 2 + neg);
+begin
+    if a = 0 then
+        when b >= 1.5 & a <= 5, 1 : 0;
+    elsif a < 10 then
+        switch a is
+            case 1 => fold left + list1 endfold;
+            case 2 => fold right - list2 endfold;
+            others => 2;
+        endswitch;
+    else
+        if ch /= 'A' then
+            if b < 2.0 then
+                x + 1;
+            else
+                x - 1;
+            endif;
+        else
+            x * 2;
+        endif;
+    endif;
+end;
