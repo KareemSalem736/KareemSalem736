@@ -21,3 +21,7 @@ listing.o: listing.cc listing.h
 
 values.o: values.cc values.h
 	g++ -c values.cc
+
+clean:
+	rm -f *.o compile lex.yy.c parser.tab.c parser.tab.h parser.output scanner.c parser.c tokens.h
+	rm -f *.out *.gch *.tmp
