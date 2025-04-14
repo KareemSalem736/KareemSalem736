@@ -47,7 +47,8 @@ double result;
 %token ARROW
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS
-	RETURNS SWITCH WHEN
+	RETURNS SWITCH WHEN ELSIF ENDFOLD ENDIF FOLD IF LEFT REAL RIGHT THEN REAL_LITERAL 
+	OROP NOTOP REMOP EXPOP NEGOP
 
 %type <value> body statement_ statement cases case expression term primary
 	 condition relation
@@ -64,7 +65,8 @@ function_header:
 
 type:
 	INTEGER |
-	CHARACTER ;
+	CHARACTER |
+	REAL ;
 	
 optional_variable:
 	variable |
@@ -72,7 +74,8 @@ optional_variable:
 	
 variable:	
 	IDENTIFIER ':' type IS statement ';' {scalars.insert($1, $5);}; |
-	IDENTIFIER ':' LIST OF type IS list ';' {lists.insert($1, $7);} ;
+	IDENTIFIER ':' LIST OF type IS list ';' {lists.insert($1, $7);} |
+	error ';' ;
 
 list:
 	'(' expressions ')' {$$ = $2;} ;
@@ -92,13 +95,37 @@ statement:
 	expression |
 	WHEN condition ',' expression ':' expression {$$ = $2 ? $4 : $6;} |
 	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH
-		{$$ = !isnan($4) ? $4 : $7;} ;
+		{$$ = !isnan($4) ? $4 : $7;} |
+	FOLD direction operator list_choice ENDFOLD  |
+	IF condition THEN statement_ elsif_statements else_statement ENDIF;
+
+direction:
+	LEFT | RIGHT ;
+
+operator:
+	ADDOP | MULOP | REMOP ;
+
+list_choice:
+	list | IDENTIFIER ;
+
+elsif_statements:
+	elsif_statement elsif_statements |
+	%empty ;
+
+elsif_statement:
+	ELSIF condition THEN statement_ ;
+
+else_statement:
+	ELSE statement_ |
+	%empty ;
+
 cases:
 	cases case {$$ = !isnan($1) ? $1 : $2;} |
 	%empty {$$ = NAN;} ;
 	
 case:
-	CASE INT_LITERAL ARROW statement ';' {$$ = $<value>-2 == $2 ? $4 : NAN;} ; 
+	CASE INT_LITERAL ARROW statement ';' {$$ = $<value>-2 == $2 ? $4 : NAN;} |
+	error ';' ; 
 
 condition:
 	condition ANDOP relation {$$ = $1 && $2;} |
@@ -106,7 +133,8 @@ condition:
 
 relation:
 	'(' condition ')' {$$ = $2;} |
-	expression RELOP expression {$$ = evaluateRelational($1, $2, $3);} ;
+	expression RELOP expression {$$ = evaluateRelational($1, $2, $3);} |
+	NOTOP relation ;
 
 expression:
 	expression ADDOP term {$$ = evaluateArithmetic($1, $2, $3);} |
@@ -121,7 +149,9 @@ primary:
 	INT_LITERAL | 
 	CHAR_LITERAL |
 	IDENTIFIER '(' expression ')' {$$ = extract_element($1, $3); } |
-	IDENTIFIER {if (!scalars.find($1, $$)) appendError(UNDECLARED, $1);} ;
+	IDENTIFIER {if (!scalars.find($1, $$)) appendError(UNDECLARED, $1);} |
+	REAL_LITERAL |
+	NEGOP primary ;
 
 %%
 

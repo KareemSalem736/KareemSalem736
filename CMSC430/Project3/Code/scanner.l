@@ -60,4 +60,3 @@ when		{ ECHO; return(WHEN); }
 {punc}		{ ECHO; return(yytext[0]); }
 .		{ ECHO; appendError(LEXICAL, yytext); }
 %%
-
