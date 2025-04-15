@@ -8,8 +8,11 @@
 
 typedef char* CharPtr;
 
-enum Operators {ADD, MULTIPLY, LESS, AND};
+#include <vector>
+using std::vector;
+
+enum Operators { ADD, SUBTRACT, MULTIPLY, DIVIDE, REMAINDER, EXPONENT, NEGATE, LESS, LESSEQ, GREATER, GREATEREQ, EQUAL, NOTEQUAL, AND, OR, NOT };
 
 double evaluateArithmetic(double left, Operators operator_, double right);
 double evaluateRelational(double left, Operators operator_, double right);
-
+double evaluateFold(int direction, Operators op, vector<double>* list);
