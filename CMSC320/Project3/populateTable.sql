@@ -1,0 +1,57 @@
+INSERT INTO Distributor VALUES (1, 'Universal Pictures');
+INSERT INTO Distributor VALUES (2, 'Paramount');
+INSERT INTO Distributor VALUES (3, '20th Century Studios');
+INSERT INTO Distributor VALUES (4, 'Warner Bros');
+INSERT INTO Distributor VALUES (5, 'Lionsgate');
+
+INSERT INTO Movie VALUES (101, 'Inception', 148, 1, 'PG-13', TO_DATE('2010-07-16', 'YYYY-MM-DD'));
+INSERT INTO Movie VALUES (102, 'Interstellar', 169, 1, 'PG-13', TO_DATE('2014-11-07', 'YYYY-MM-DD'));
+INSERT INTO Movie VALUES (103, 'The Matrix', 136, 2, 'R', TO_DATE('1999-03-31', 'YYYY-MM-DD'));
+INSERT INTO Movie VALUES (104, 'Avengers: Endgame', 181, 3, 'PG-13', TO_DATE('2019-04-26', 'YYYY-MM-DD'));
+INSERT INTO Movie VALUES (105, 'The Godfather', 175, 2, 'R', TO_DATE('1972-03-24', 'YYYY-MM-DD'));
+
+INSERT INTO Staff VALUES (1001, 'Christopher Nolan');
+INSERT INTO Staff VALUES (1002, 'Keanu Reeves');
+INSERT INTO Staff VALUES (1003, 'Robert Downey Jr.');
+INSERT INTO Staff VALUES (1004, 'Marlon Brando');
+INSERT INTO Staff VALUES (1005, 'Francis Ford Coppola');
+
+INSERT INTO Customer VALUES (201, 'Alice Johnson', '123 Elm St, Fairfax, VA 22030', '7035551111');
+INSERT INTO Customer VALUES (202, 'Bob Smith', '456 Oak St, Reston, VA 20190', '7035552222');
+INSERT INTO Customer VALUES (203, 'Charlie Lee', '789 Pine St, Herndon, VA 20170', '7035553333');
+INSERT INTO Customer VALUES (204, 'Dana Scott', '321 Birch St, Arlington, VA 22201', '7035554444');
+INSERT INTO Customer VALUES (205, 'Eve Harris', '654 Maple St, Chantilly, VA 20151', '7035555555');
+
+INSERT INTO Copy VALUES (301, 101, 3.99, 'DVD', 'false', 11111);
+INSERT INTO Copy VALUES (302, 102, 4.99, 'DVD', 'true', 11112);
+INSERT INTO Copy VALUES (303, 103, 2.99, 'VHS', 'false', 11113);
+INSERT INTO Copy VALUES (304, 104, 5.99, 'DVD', 'true', 11114);
+INSERT INTO Copy VALUES (305, 105, 2.49, 'VHS', 'false', 11115);
+
+INSERT INTO Catalog VALUES (1, 301, 1.50);
+INSERT INTO Catalog VALUES (2, 302, 2.00);
+INSERT INTO Catalog VALUES (3, 303, 1.00);
+INSERT INTO Catalog VALUES (4, 304, 3.00);
+INSERT INTO Catalog VALUES (5, 305, 0.75);
+
+INSERT INTO MovieStaff VALUES (401, 1001, 101, 'Director');
+INSERT INTO MovieStaff VALUES (402, 1002, 103, 'Actor');
+INSERT INTO MovieStaff VALUES (403, 1003, 104, 'Actor');
+INSERT INTO MovieStaff VALUES (404, 1004, 105, 'Actor');
+INSERT INTO MovieStaff VALUES (405, 1005, 105, 'Director');
+
+INSERT INTO Award VALUES (501, 101, NULL, 'Best Director', 2010);
+INSERT INTO Award VALUES (502, NULL, 1002, 'Best Actor', 1999);
+INSERT INTO Award VALUES (503, 104, 1003, 'Best Ensemble', 2019);
+INSERT INTO Award VALUES (504, 105, NULL, 'Best Picture', 1972);
+INSERT INTO Award VALUES (505, NULL, 1005, 'Best Director', 1972);
+
+INSERT INTO Rental VALUES (601, 302, 201, TO_DATE('2025-04-15', 'YYYY-MM-DD'), 4.99, 0.00, 0, 0.00, 0.00, TO_DATE('2025-04-10', 'YYYY-MM-DD'));
+INSERT INTO Rental VALUES (602, 304, 202, TO_DATE('2025-04-14', 'YYYY-MM-DD'), 5.99, 0.50, 0, 0.00, 0.00, TO_DATE('2025-04-09', 'YYYY-MM-DD'));
+INSERT INTO Rental VALUES (603, 303, 203, TO_DATE('2025-04-12', 'YYYY-MM-DD'), 2.99, 1.00, 10, 0.00, 0.00, TO_DATE('2025-04-01', 'YYYY-MM-DD'));
+INSERT INTO Rental VALUES (604, 301, 204, TO_DATE('2025-04-16', 'YYYY-MM-DD'), 3.99, 0.00, 5, 1.00, 0.00, TO_DATE('2025-04-13', 'YYYY-MM-DD'));
+INSERT INTO Rental VALUES (605, 305, 205, TO_DATE('2025-04-10', 'YYYY-MM-DD'), 2.49, 0.00, 0, 0.00, 0.50, TO_DATE('2025-04-05', 'YYYY-MM-DD'));
+
+DELETE FROM Award WHERE AwardID = 505;
+DELETE FROM Rental WHERE RentalID = 605;
+DELETE FROM Customer WHERE CustomerID = 205;

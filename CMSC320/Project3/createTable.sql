@@ -18,7 +18,7 @@ CREATE TABLE Movie(
     MovieID     NUMBER     PRIMARY KEY,
     Title   VARCHAR2(150),
     Length  NUMBER,
-    Type    NUMBER,
+    Type_    NUMBER,
     Rating  VARCHAR2(5),
     ReleaseDate DATE);
 
