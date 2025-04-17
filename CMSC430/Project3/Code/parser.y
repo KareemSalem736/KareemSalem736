@@ -1,7 +1,7 @@
 /* CMSC 430 Compiler Theory and Design
-   Project 3 Skeleton
-   UMGC CITE
-   Summer 2023
+   Project 3
+   Kareem Salem
+   April 15 2025
    
    Project 3 Parser with semantic actions for the interpreter */
 
@@ -145,17 +145,17 @@ cases:
 	
 case:
 	CASE INT_LITERAL ARROW statement ';' {$$ = $<value>-2 == $2 ? $4 : NAN;} |
-	error ';' ; 
+	error ';' { $$ = NAN; } ; 
 
 condition:
 	condition OROP relation { $$ = $1 || $3; } |
-	condition ANDOP relation {$$ = $1 && $2;} |
+	condition ANDOP relation {$$ = $1 && $3;} |
 	relation ;
 
 relation:
 	'(' condition ')' {$$ = $2;} |
 	expression RELOP expression {$$ = evaluateRelational($1, $2, $3);} |
-	NOTOP relation ;
+	NOTOP relation { $$ = ! $2; } ;
 
 expression:
 	expression ADDOP term {$$ = evaluateArithmetic($1, $2, $3);} |
