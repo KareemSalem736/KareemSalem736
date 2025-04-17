@@ -17,6 +17,7 @@ using namespace std;
 int yylex();
 void yyerror(const char* message);
 
+
 %}
 
 %define parse.error verbose
