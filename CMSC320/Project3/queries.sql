@@ -36,7 +36,20 @@ UPDATE Customer
 SET Name = 'Alice Thompson' 
 WHERE CustomerID = 201;
 
+DELETE FROM Rental
+WHERE CustomerID = 204;
+
 DELETE FROM Customer 
 WHERE CustomerID = 204;
+
+SELECT 
+    CustomerID AS "Account Number", 
+    Name AS "Customer Name", 
+    SUBSTR(Address, 1, INSTR(Address, ',') - 1) AS "Street", 
+    SUBSTR(Address, -5) AS "ZIP Code"
+FROM 
+    Customer
+ORDER BY 
+    CustomerID;
 
 ROLLBACK;
