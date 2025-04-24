@@ -1,11 +1,7 @@
-// Semantic error setting integer value as char
+// Semantic error for mismatching types in a list
 
 function main returns integer;
-    a: integer is 40;
+    listTest: list of character is ('A', 'B', 700, 'C');
 begin
-    if a < 10 then
-        'B';
-    else
-        'A';
-    endif; 
+    listTest(2);
 end;
