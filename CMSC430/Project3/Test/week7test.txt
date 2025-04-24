@@ -1,0 +1,11 @@
+// Semantic error setting integer value as char
+
+function main returns integer;
+    a: integer is 40;
+begin
+    if a < 10 then
+        'B';
+    else
+        'A';
+    endif; 
+end;
