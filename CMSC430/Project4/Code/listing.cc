@@ -1,7 +1,7 @@
 // CMSC 430 Compiler Theory and Design
-// Project 4 Skeleton
-// UMGC CITE
-// Summer 2023
+// Project 4
+// Kareem Salem
+// April 27, 2025
 
 // This file contains the bodies of the functions that produces the 
 // compilation listing
