@@ -34,43 +34,59 @@ Symbols<Types> lists;
 
 %token <iden> IDENTIFIER
 
-%token <type> INT_LITERAL CHAR_LITERAL
+%token <type> INT_LITERAL CHAR_LITERAL REAL_LITERAL
 
 %token ADDOP MULOP RELOP ANDOP ARROW
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS
-	RETURNS SWITCH WHEN
+	RETURNS SWITCH WHEN ELSIF ENDFOLD ENDIF FOLD IF LEFT REAL RIGHT THEN REAL_LITERAL 
+	OROP NOTOP REMOP EXPOP NEGOP
 
-%type <type> list expressions body type statement_ statement cases case expression
-	term primary
+%type <type> list expressions body type statement_ statement cases case expression term 
+	primary factor elsif_statements elsif_statement else_statement list_choice function_header
 
 %%
 
-function:	
-	function_header optional_variable body ;
-	
+function:
+    function_header optional_variable body { checkAssignment($1, $3, "Function Return"); } ;
 		
-function_header:	
-	FUNCTION IDENTIFIER RETURNS type ';' ;
+function_header:
+    FUNCTION IDENTIFIER parameters RETURNS type ';' { $$ = $5; } |
+    FUNCTION error ';' { $$ = MISMATCH; };
+
+parameters:
+	parameter_list |
+	%empty ;
+
+parameter_list:
+	parameter |
+	parameter ',' parameter_list ;
+
+parameter:
+	IDENTIFIER ':' type ;
 
 type:
 	INTEGER {$$ = INT_TYPE;} |
-	CHARACTER {$$ = CHAR_TYPE; };
+	CHARACTER {$$ = CHAR_TYPE; } |
+	REAL {$$ = REAL_TYPE; } ;
 	
 optional_variable:
-	variable |
+	variable optional_variable |
 	%empty ;
     
-variable:	
-	IDENTIFIER ':' type IS statement ';' {checkAssignment($3, $5, "Variable Initialization"); scalars.insert($1, $3);} |
-	IDENTIFIER ':' LIST OF type IS list ';' {lists.insert($1, $5);} ;
+variable:
+    IDENTIFIER ':' type IS statement ';' 
+        { checkDuplicate(scalars, $1, "Scalar"); checkAssignment($3, $5, "Variable Initialization"); scalars.insert($1, $3); } |
+    IDENTIFIER ':' LIST OF type IS list ';' 
+        { checkDuplicate(lists, $1, "List"); checkListAssignment($5, $7); lists.insert($1, $5); } |
+    error ';' ;
 
 list:
 	'(' expressions ')' {$$ = $2;} ;
 
 expressions:
-	expressions ',' expression | 
-	expression ;
+	expressions ',' expression { $$ = checkList($1, $3); } |
+	expression { $$ = $1; };
 
 body:
 	BEGIN_ statement_ END ';' {$$ = $2;} ;
@@ -81,40 +97,74 @@ statement_:
 	
 statement:
 	expression |
-	WHEN condition ',' expression ':' expression 
-		{$$ = checkWhen($4, $6);} |
-	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH 
-		{$$ = checkSwitch($2, $4, $7);} ;
+	WHEN condition ',' expression ':' expression {$$ = checkWhen($4, $6);} |
+	SWITCH expression IS cases OTHERS ARROW statement ';' ENDSWITCH {$$ = checkSwitch($2, $4, $7);} |
+	FOLD direction operator list_choice ENDFOLD { $$ = checkFold($4); }  |
+	IF condition THEN statement_ elsif_statements else_statement ENDIF { $$ = checkIf($4, $5, $6); }  ;
+
+direction:
+	LEFT | RIGHT ;
+
+operator:
+	ADDOP | MULOP | REMOP ;
+
+list_choice:
+    list { $$ = $1; } |
+    IDENTIFIER { $$ = find(lists, $1, "List"); };
+
+elsif_statements:
+    elsif_statement elsif_statements { $$ = checkIf($1, $2, NONE); } |
+    %empty { $$ = NONE; };
+
+elsif_statement:
+    ELSIF condition THEN statement_ { $$ = $4; };
+
+else_statement:
+    ELSE statement_ { $$ = $2; } |
+    %empty { $$ = NONE; };
 
 cases:
 	cases case {$$ = checkCases($1, $2);} |
 	%empty {$$ = NONE;} ;
 	
 case:
-	CASE INT_LITERAL ARROW statement ';' {$$ = $4;} ; 
+	CASE INT_LITERAL ARROW statement ';' {$$ = $4;} |
+	error ';' ; 
 
 condition:
-	condition ANDOP relation |
+	condition OROP logical_and |
+	logical_and ;
+
+logical_and:
+	logical_and ANDOP relation |
 	relation ;
 
 relation:
-	'(' condition')' |
-	expression RELOP expression ;
+	'(' condition ')' |
+	expression RELOP expression { checkRelational($1, $3); } |
+	NOTOP relation ;
 	
 expression:
 	expression ADDOP term {$$ = checkArithmetic($1, $3);} |
 	term ;
       
 term:
-	term MULOP primary {$$ = checkArithmetic($1, $3);} |
-	primary ;
+    term MULOP factor { $$ = checkArithmetic($1, $3); } |
+    term REMOP factor { $$ = checkRemainder($1, $3); } |
+    factor ;
+
+factor:
+	primary |
+	primary EXPOP factor { $$ = checkArithmetic($1, $3); } ;
 
 primary:
 	'(' expression ')' {$$ = $2;} |
 	INT_LITERAL | 
 	CHAR_LITERAL |
-	IDENTIFIER '(' expression ')' {$$ = find(lists, $1, "List");} |
-	IDENTIFIER  {$$ = find(scalars, $1, "Scalar");} ;
+	IDENTIFIER '(' expression ')' { checkListSubscript($3); $$ = find(lists, $1, "List"); } |
+	IDENTIFIER  {$$ = find(scalars, $1, "Scalar");} |
+	REAL_LITERAL |
+	NEGOP primary { $$ = checkArithmeticOperator($2); } ;
 
 %%
 

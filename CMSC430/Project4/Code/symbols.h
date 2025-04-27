@@ -4,6 +4,8 @@
 // Summer 2023
 
 // This file contains the template symbol table
+#ifndef SYMBOLS_H
+#define SYMBOLS_H
 
 template <typename T>
 class Symbols
@@ -33,3 +35,6 @@ bool Symbols<T>::find(char* lexeme, T& entry)
 		entry = iterator->second;
 	return found;
 }
+
+
+#endif
