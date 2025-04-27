@@ -24,7 +24,7 @@ ws		[ \t\r]+
 comment		"//".*\n
 new_comment		"--".*\n
 line		[\n]
-id		[A-Za-z]([A-Za-z0-9])*
+id		[A-Za-z]([A-Za-z0-9_])*
 digit		[0-9]
 dec		{digit}+
 char		\'(\\.|[^\\'])\'

@@ -39,7 +39,7 @@ Symbols<Types> lists;
 %token ADDOP MULOP RELOP ANDOP ARROW
 
 %token BEGIN_ CASE CHARACTER ELSE END ENDSWITCH FUNCTION INTEGER IS LIST OF OTHERS
-	RETURNS SWITCH WHEN ELSIF ENDFOLD ENDIF FOLD IF LEFT REAL RIGHT THEN REAL_LITERAL 
+	RETURNS SWITCH WHEN ELSIF ENDFOLD ENDIF FOLD IF LEFT REAL RIGHT THEN  
 	OROP NOTOP REMOP EXPOP NEGOP
 
 %type <type> list expressions body type statement_ statement cases case expression term 
@@ -92,7 +92,7 @@ body:
 	BEGIN_ statement_ END ';' {$$ = $2;} ;
     
 statement_:
-	statement ';' |
+	statement ';' { $$ = $1; } |
 	error ';' {$$ = MISMATCH;} ;
 	
 statement:
@@ -113,7 +113,9 @@ list_choice:
     IDENTIFIER { $$ = find(lists, $1, "List"); };
 
 elsif_statements:
-    elsif_statement elsif_statements { $$ = checkIf($1, $2, NONE); } |
+    elsif_statement elsif_statements { 
+        if ($1 == MISMATCH || $2 == MISMATCH) $$ = MISMATCH;
+        else $$ = $1; } |
     %empty { $$ = NONE; };
 
 elsif_statement:
@@ -129,7 +131,7 @@ cases:
 	
 case:
 	CASE INT_LITERAL ARROW statement ';' {$$ = $4;} |
-	error ';' ; 
+	error ';' {$$ = MISMATCH;} ; 
 
 condition:
 	condition OROP logical_and |
