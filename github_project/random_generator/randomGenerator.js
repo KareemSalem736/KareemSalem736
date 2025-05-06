@@ -18,7 +18,7 @@ const randomWord3 = arr3[Math.floor(Math.random() * arr3.length)];
 console.log(`The ${randomWord3} ${randomWord1} went to the ${randomWord2}.`);
 
 //react statehook
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 const lightSwitch = () => {
     const [light, setLight] = useState('Off');
@@ -26,10 +26,15 @@ const lightSwitch = () => {
     const toggleLight = () => {
         setLight(prev => prev === 'Off' ? 'On' : 'Off');
     }
+
+    useEffect (() => {
+        console.log(`Light is now ${light}`);
+    }, [light]);
+
     return (
         <div>
             <p>Light is {light}</p>
-            <button onClick={toggleLight}></button>
+            <button onClick={toggleLight}>Toggle Light</button>
         </div>
     );
 };
