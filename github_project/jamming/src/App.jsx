@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { accessUrl } from './Spotify.jsx';
 import './App.css'
 
@@ -8,18 +8,18 @@ import Playlist from './Playlist.jsx';
 import SearchBar from './SearchBar.jsx';
 import SearchResults from './SearchResults.jsx';
 
-const token = Spotify.getAccessToken();
-const hasTokenInUrl = window.location.href.includes('access_token');
-
-if (!token && !hasTokenInUrl) {
-  console.log("Redirecting to Spotify login...");
-  window.location = accessUrl;
-}
-
 const App = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistName, setPlaylistName] = useState("New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+
+  const token = Spotify.getAccessToken();
+  const hasTokenInUrl = window.location.href.includes('access_token');
+
+  if (!token && !hasTokenInUrl) {
+    console.log("Redirecting to Spotify login...");
+    window.location = accessUrl;
+  }
 
   const search = useCallback((term) => {
     Spotify.search(term).then(setSearchResults);

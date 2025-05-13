@@ -2,12 +2,18 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { NavLink } from 'react-router-dom'
+import Page2 from './page2'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
+    <nav>
+      <NavLink to='/page2'>Page2</NavLink>
+      <NavLink to='/page3'>Page3</NavLink>
+    </nav>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
