@@ -139,3 +139,36 @@ def hierarchy_pos(G, root, width=1.0, vert_gap=0.2, vert_loc=0, xcenter=0.5, pos
 
 visualize_heap(h.heap, title="Max Heap")
 visualize_heap(h.heap, title="Min Heap")
+
+
+#Heap Sort
+
+def heapsort_iterative(arr):
+    def heapify_down(arr, n, i):
+        while True:
+            largest = i
+            left = 2 * i + 1
+            right = 2 * i + 2
+
+            if left < n and arr[left] > arr[largest]:
+                largest = left
+            if right < n and arr[right] > arr[largest]:
+                largest = right
+
+            if largest != i:
+                arr[i], arr[largest] = arr[largest], arr[i]
+                i = largest
+            else:
+                break
+
+    # Build heap (max-heap)
+    n = len(arr)
+    for i in range(n // 2 - 1, -1, -1):
+        heapify_down(arr, n, i)
+
+    # Extract elements from heap
+    for i in range(n - 1, 0, -1):
+        arr[0], arr[i] = arr[i], arr[0]
+        heapify_down(arr, i, 0)
+
+    return arr
