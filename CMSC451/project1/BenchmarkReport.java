@@ -1,3 +1,7 @@
+/*
+Kareem Salem    CMSC451     Project 1   06/05/2025 
+ */
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
@@ -15,7 +19,24 @@ public class BenchmarkReport {
 
     public void run() {
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Benchmark File");
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.isDirectory() ||
+                    f.getName().equals("quickSort.txt") ||
+                    f.getName().equals("bubbleSort.txt");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Benchmark Files (quickSort.txt, bubbleSort.txt)";
+            }
+        });
+
         int result = fileChooser.showOpenDialog(null);
+
 
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
@@ -60,7 +81,7 @@ public class BenchmarkReport {
                 JTable table = new JTable(new ReportTableModel(tableData, columnNames));
                 JScrollPane scrollPane = new JScrollPane(table);
 
-                JFrame frame = new JFrame("Benchmark Report");
+                JFrame frame = new JFrame("Benchmark Report - " + selectedFile.getName());
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.add(scrollPane, BorderLayout.CENTER);
                 frame.setSize(600, 400);

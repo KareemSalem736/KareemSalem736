@@ -1,3 +1,7 @@
+/*
+Kareem Salem    CMSC451     Project 1   06/05/2025 
+ */
+
 import java.util.Random;
 import java.util.Arrays;
 import java.io.BufferedWriter;
