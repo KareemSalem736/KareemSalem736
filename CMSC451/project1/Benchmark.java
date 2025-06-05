@@ -1,11 +1,16 @@
 import java.util.Random;
 import java.util.Arrays;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Benchmark {
     public static void main(String[] args) {
         Random rand = new Random();
         BubbleSort bubbleSort = new BubbleSort();
         QuickSort quickSort = new QuickSort();
+        String quickSortFile = "quickSort.txt";
+        String bubbleSortFile = "bubbleSort.txt";
 
         int[] sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200};
 
@@ -20,13 +25,29 @@ public class Benchmark {
                 int[] quickCopy = Arrays.copyOf(array, array.length);
                 quickSort.sort(quickCopy);
                 if (!isSorted(quickCopy)) throw new RuntimeException("QuickSort failed on size " + size);
-                System.out.println("QuickSort - Size: " + size + " Time: " + quickSort.getTime() + " Count: " + quickSort.getCount());
+                String quickContent = "QuickSort - Size: " + size + " Time: " + quickSort.getTime() + " Count: " + quickSort.getCount();
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(quickContent))) {
+                    writer.write(quickContent);
+                    System.out.println("Successfully wrote to the quick sort file");
+                } catch (IOException e) {
+                    System.out.println("An error occurred writing to the quick sort file");
+                    e.printStackTrace();
+                }
 
                 // BubbleSort
                 int[] bubbleCopy = Arrays.copyOf(array, array.length);
                 bubbleSort.sort(bubbleCopy);
                 if (!isSorted(bubbleCopy)) throw new RuntimeException("BubbleSort failed on size " + size);
-                System.out.println("BubbleSort - Size: " + size + " Time: " + bubbleSort.getTime() + " Count: " + bubbleSort.getCount());
+                String bubbleContent = "BubbleSort - Size: " + size + " Time: " + bubbleSort.getTime() + " Count: " + bubbleSort.getCount();
+
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(bubbleContent))) {
+                    writer.write(bubbleContent);
+                    System.out.println("Successfully wrote to the bubble sort file");
+                } catch (IOException e) {
+                    System.out.println("An error occurred writing to the bubble sort file");
+                    e.printStackTrace();
+                }
             }
         }
     }
