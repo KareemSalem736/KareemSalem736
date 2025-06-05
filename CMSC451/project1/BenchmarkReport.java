@@ -1,29 +1,120 @@
-import javax.swing.JFileChooser;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.JScrollPane;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.awt.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BenchmarkReport {
-    public void benchmarkRport(String file) {
-        TableModel dataModel = new AbstractTableModel() {
-            public int getColumnCount() { return 12; }
-            public int getRowCount() { return 4; }
-            public Object getValueAt(int row, int col) { return new Integer(row*col); }
-        };
-        JTable table = new JTable(dataModel);
-        JScrollPane scrollpane = new JScrollPane(table);
 
-        int[] selectionRow = table.getSelectedRows();
-        for (int i = 0; i < selectionRow.length; i++) {
-            selectionRow[i] = table.convertRowIndexToModel(selectionRow[i]);
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new BenchmarkReport().run();
+        });
+    }
+
+    public void run() {
+        JFileChooser fileChooser = new JFileChooser();
+        int result = fileChooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            List<Object[]> tableData = new ArrayList<>();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(selectedFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] tokens = line.trim().split("\\s+");
+                    int size = Integer.parseInt(tokens[0]);
+
+                    List<Integer> counts = new ArrayList<>();
+                    List<Long> times = new ArrayList<>();
+
+                    for (int i = 1; i < tokens.length; i += 2) {
+                        counts.add(Integer.parseInt(tokens[i]));
+                        times.add(Long.parseLong(tokens[i + 1]));
+                    }
+
+                    double avgCount = average(counts);
+                    double covCount = coefficientOfVariation(counts, avgCount);
+
+                    double avgTime = average(times);
+                    double covTime = coefficientOfVariation(times, avgTime);
+
+                    Object[] row = {
+                        size,
+                        String.format("%.2f", avgCount),
+                        String.format("%.2f", covCount) + "%",
+                        String.format("%.2f", avgTime),
+                        String.format("%.2f", covTime) + "%"
+                    };
+
+                    tableData.add(row);
+                }
+
+                String[] columnNames = {
+                    "Data Set Size", "Avg Count", "CoV Count (%)", "Avg Time (ns)", "CoV Time (%)"
+                };
+
+                JTable table = new JTable(new ReportTableModel(tableData, columnNames));
+                JScrollPane scrollPane = new JScrollPane(table);
+
+                JFrame frame = new JFrame("Benchmark Report");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.add(scrollPane, BorderLayout.CENTER);
+                frame.setSize(600, 400);
+                frame.setVisible(true);
+
+            } catch (IOException | NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Error reading or parsing file: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
-        int[] selectionCol = table.getSelectedColumns();
-        for (int i = 0; i < selectionCol.length; i++) {
-            selectionCol[i] = table.convertColumnIndexToModel(selectionCol[i]);
+    }
+
+    private double average(List<? extends Number> values) {
+        return values.stream().mapToDouble(Number::doubleValue).average().orElse(0.0);
+    }
+
+    private double coefficientOfVariation(List<? extends Number> values, double mean) {
+        if (mean == 0.0) return 0.0;
+
+        double variance = values.stream()
+            .mapToDouble(v -> Math.pow(v.doubleValue() - mean, 2))
+            .sum() / values.size();
+
+        double stdDev = Math.sqrt(variance);
+        return (stdDev / mean) * 100;
+    }
+
+    static class ReportTableModel extends AbstractTableModel {
+        private final List<Object[]> data;
+        private final String[] columnNames;
+
+        public ReportTableModel(List<Object[]> data, String[] columnNames) {
+            this.data = data;
+            this.columnNames = columnNames;
+        }
+
+        @Override
+        public int getRowCount() {
+            return data.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            return data.get(rowIndex)[columnIndex];
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
         }
     }
 }

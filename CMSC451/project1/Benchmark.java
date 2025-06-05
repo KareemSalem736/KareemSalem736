@@ -9,47 +9,72 @@ public class Benchmark {
         Random rand = new Random();
         BubbleSort bubbleSort = new BubbleSort();
         QuickSort quickSort = new QuickSort();
+
+        // JVM Warm-up
+        System.out.println("Warming up JVM...");
+        for (int i = 0; i < 10; i++) {
+            int[] warmup = rand.ints(1000, 0, 10000).toArray(); // 1000 elements of random data
+
+            // QuickSort warm-up
+            int[] quickCopy = Arrays.copyOf(warmup, warmup.length);
+            quickSort.sort(quickCopy);
+
+            // BubbleSort warm-up
+            int[] bubbleCopy = Arrays.copyOf(warmup, warmup.length);
+            bubbleSort.sort(bubbleCopy);
+        }
+        System.out.println("Warm-up complete. Beginning benchmark...");
+
+
         String quickSortFile = "quickSort.txt";
         String bubbleSortFile = "bubbleSort.txt";
 
         int[] sizes = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200};
 
-        for (int size : sizes) {
-            for (int i = 0; i < 40; i++) {
-                int[] array = new int[size];
-                for (int j = 0; j < size; j++) {
-                    array[j] = rand.nextInt(10000);
+        try (
+            BufferedWriter quickWriter = new BufferedWriter(new FileWriter(quickSortFile));
+            BufferedWriter bubbleWriter = new BufferedWriter(new FileWriter(bubbleSortFile));
+        ) {
+            for (int size : sizes) {
+                StringBuilder quickLine = new StringBuilder(size + " ");
+                StringBuilder bubbleLine = new StringBuilder(size + " ");
+
+                for (int i = 0; i < 40; i++) {
+                    int[] array = new int[size];
+                    for (int j = 0; j < size; j++) {
+                        array[j] = rand.nextInt(10000);
+                    }
+
+                    // QuickSort
+                    int[] quickCopy = Arrays.copyOf(array, array.length);
+                    quickSort.sort(quickCopy);
+                    if (!isSorted(quickCopy)) throw new RuntimeException("QuickSort failed on size " + size);
+                    quickLine.append(quickSort.getCount()).append(" ").append(quickSort.getTime()).append(" ");
+
+                    // BubbleSort
+                    int[] bubbleCopy = Arrays.copyOf(array, array.length);
+                    bubbleSort.sort(bubbleCopy);
+                    if (!isSorted(bubbleCopy)) throw new RuntimeException("BubbleSort failed on size " + size);
+                    bubbleLine.append(bubbleSort.getCount()).append(" ").append(bubbleSort.getTime()).append(" ");
                 }
+                quickWriter.write(quickLine.toString().trim());
+                quickWriter.newLine();
 
-                // QuickSort
-                int[] quickCopy = Arrays.copyOf(array, array.length);
-                quickSort.sort(quickCopy);
-                if (!isSorted(quickCopy)) throw new RuntimeException("QuickSort failed on size " + size);
-                String quickContent = "QuickSort - Size: " + size + " Time: " + quickSort.getTime() + " Count: " + quickSort.getCount();
-
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(quickContent))) {
-                    writer.write(quickContent);
-                    System.out.println("Successfully wrote to the quick sort file");
-                } catch (IOException e) {
-                    System.out.println("An error occurred writing to the quick sort file");
-                    e.printStackTrace();
-                }
-
-                // BubbleSort
-                int[] bubbleCopy = Arrays.copyOf(array, array.length);
-                bubbleSort.sort(bubbleCopy);
-                if (!isSorted(bubbleCopy)) throw new RuntimeException("BubbleSort failed on size " + size);
-                String bubbleContent = "BubbleSort - Size: " + size + " Time: " + bubbleSort.getTime() + " Count: " + bubbleSort.getCount();
-
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(bubbleContent))) {
-                    writer.write(bubbleContent);
-                    System.out.println("Successfully wrote to the bubble sort file");
-                } catch (IOException e) {
-                    System.out.println("An error occurred writing to the bubble sort file");
-                    e.printStackTrace();
-                }
+                bubbleWriter.write(bubbleLine.toString().trim());
+                bubbleWriter.newLine();
             }
+            System.out.println("Benchmarking complete, Data written to files.");
+        } catch (IOException e) {
+            System.out.println("An error occurred writing the output files.");
+            e.printStackTrace();
         }
+    }
+
+    private static boolean isSorted(int[] array) {
+        for (int i = 1; i < array.length; i++) {
+            if (array[i - 1] > array[i]) return false;
+        }
+        return true;
     }
 }
 
@@ -138,11 +163,4 @@ abstract class AbstractSort {
     public long getTime() {
         return endTime - startTime;
     }
-}
-
-private static boolean isSorted(int[] array) {
-    for (int i = 1; i < array.length; i++) {
-        if (array[i - 1] > array[i]) return false;
-    }
-    return true;
 }
